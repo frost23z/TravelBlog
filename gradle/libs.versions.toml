@@ -13,6 +13,9 @@ dataStore = "1.1.4"
 serialization-json = "1.8.0"
 coil = "3.1.0"
 ktor = "3.1.2"
+room = "2.7.0"
+ksp = "2.1.20-2.0.0"
+koin = "4.0.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,27 +37,49 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
 serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization-json" }
 
+# room
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
+# coil
 coil-bom = { group = "io.coil-kt.coil3", name = "coil-bom", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose" }
 coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp" }
 
+# ktor
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
+# koin
+koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android" }
+koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose" }
+koin-compose-navigation = { group = "io.insert-koin", name = "koin-androidx-compose-navigation" }
+koin-startup = { group = "io.insert-koin", name = "koin-androidx-startup" }
+koin-workmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager" }
+koin-ktor = { group = "io.insert-koin", name = "koin-ktor" }
+koin-logger-slf4j = { group = "io.insert-koin", name = "koin-logger-slf4j" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [bundles]
 coil = [
     "coil-compose",
     "coil-network-okhttp"
+]
+
+room = [
+    "androidx-room-runtime",
+    "androidx-room-ktx"
 ]
 ktor = [
     "ktor-client-core",
@@ -62,4 +87,13 @@ ktor = [
     "ktor-client-logging",
     "ktor-client-content-negotiation",
     "ktor-serialization-kotlinx-json"
+]
+koin = [
+    "koin-android",
+    "koin-compose",
+    "koin-compose-navigation",
+    "koin-startup",
+    "koin-workmanager",
+    "koin-ktor",
+    "koin-logger-slf4j"
 ]
