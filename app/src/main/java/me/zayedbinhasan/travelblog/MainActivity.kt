@@ -13,6 +13,8 @@ import androidx.navigation.navigation
 import me.zayedbinhasan.travelblog.navigation.Destination
 import me.zayedbinhasan.travelblog.navigation.NavigationActions
 import me.zayedbinhasan.travelblog.navigation.Navigator
+import me.zayedbinhasan.travelblog.ui.screen.detail.DetailScreen
+import me.zayedbinhasan.travelblog.ui.screen.detail.DetailViewModel
 import me.zayedbinhasan.travelblog.ui.screen.list.ListScreen
 import me.zayedbinhasan.travelblog.ui.screen.list.ListViewModel
 import me.zayedbinhasan.travelblog.ui.screen.login.LoginScreen
@@ -65,7 +67,9 @@ class MainActivity : ComponentActivity() {
                             ListScreen(state = state, onIntent = viewModel::processIntent)
                         }
                         composable<Destination.DetailDestination> {
-                            // DetailScreen
+                            val viewModel = koinViewModel<DetailViewModel>()
+                            val state by viewModel.state.collectAsStateWithLifecycle()
+                            DetailScreen(state = state, onIntent = viewModel::processIntent)
                         }
                     }
                 }

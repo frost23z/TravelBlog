@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.zayedbinhasan.travelblog.domain.repository.Repository
 import me.zayedbinhasan.travelblog.mvi.BaseViewModel
+import me.zayedbinhasan.travelblog.navigation.Destination
 import me.zayedbinhasan.travelblog.navigation.Navigator
 import me.zayedbinhasan.travelblog.util.NetworkError
 import me.zayedbinhasan.travelblog.util.onError
@@ -43,7 +44,14 @@ class ListViewModel(
     }
 
     private fun handleBlogClicked(blogId: Int) {
-        sendEffect(ListEffect.NavigateToDetail(blogId))
+        viewModelScope.launch {
+            navigator.navigate(Destination.DetailDestination(blogId)) {
+                popUpTo(Destination.ListDestination) {
+                    inclusive = false
+                }
+            }
+        }
+        // sendEffect(ListEffect.NavigateToDetail(blogId))
     }
 
     private suspend fun refreshBlogsFromNetwork() {

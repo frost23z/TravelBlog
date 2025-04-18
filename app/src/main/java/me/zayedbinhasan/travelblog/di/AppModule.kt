@@ -5,8 +5,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.android.AndroidClientEngine
 import io.ktor.client.engine.android.AndroidEngineConfig
 import me.zayedbinhasan.travelblog.data.local.LocalDatabase
@@ -18,6 +16,7 @@ import me.zayedbinhasan.travelblog.navigation.DefaultNavigator
 import me.zayedbinhasan.travelblog.navigation.Destination
 import me.zayedbinhasan.travelblog.navigation.Navigator
 import me.zayedbinhasan.travelblog.preference.PreferencesManager
+import me.zayedbinhasan.travelblog.ui.screen.detail.DetailViewModel
 import me.zayedbinhasan.travelblog.ui.screen.list.ListViewModel
 import me.zayedbinhasan.travelblog.ui.screen.login.LoginViewModel
 import org.koin.android.ext.koin.androidContext
@@ -33,12 +32,21 @@ val appModule = module {
     singleOf(::provideDataStore)
 
     single<LocalDatabase> { LocalDatabase.getDatabase(androidContext()) }
-    single<RemoteHttpClient> { RemoteHttpClient(createHttpClient(AndroidClientEngine(AndroidEngineConfig()))) }
+    single<RemoteHttpClient> {
+        RemoteHttpClient(
+            createHttpClient(
+                AndroidClientEngine(
+                    AndroidEngineConfig()
+                )
+            )
+        )
+    }
 
     singleOf(::RepositoryImpl) { bind<Repository>() }
 
     viewModelOf(::LoginViewModel)
     viewModelOf(::ListViewModel)
+    viewModelOf(::DetailViewModel)
 }
 
 fun provideDataStore(context: Context): DataStore<Preferences> = PreferenceDataStoreFactory.create {
