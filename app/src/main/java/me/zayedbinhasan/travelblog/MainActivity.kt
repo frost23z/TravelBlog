@@ -4,12 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,6 +13,8 @@ import androidx.navigation.navigation
 import me.zayedbinhasan.travelblog.navigation.Destination
 import me.zayedbinhasan.travelblog.navigation.NavigationActions
 import me.zayedbinhasan.travelblog.navigation.Navigator
+import me.zayedbinhasan.travelblog.ui.screen.list.ListScreen
+import me.zayedbinhasan.travelblog.ui.screen.list.ListViewModel
 import me.zayedbinhasan.travelblog.ui.screen.login.LoginScreen
 import me.zayedbinhasan.travelblog.ui.screen.login.LoginViewModel
 import me.zayedbinhasan.travelblog.ui.theme.TravelBlogTheme
@@ -31,50 +28,44 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TravelBlogTheme {
-                Scaffold { innerPadding ->
-                    val navController = rememberNavController()
-                    val navigator = koinInject<Navigator>()
+                val navController = rememberNavController()
+                val navigator = koinInject<Navigator>()
 
-                    ObserveAsEvents(flow = navigator.navigationActions) { action ->
-                        when (action) {
-                            is NavigationActions.Navigate -> {
-                                navController.navigate(action.destination) {
-                                    action.navOptions(this)
-                                }
+                ObserveAsEvents(flow = navigator.navigationActions) { action ->
+                    when (action) {
+                        is NavigationActions.Navigate -> {
+                            navController.navigate(action.destination) {
+                                action.navOptions(this)
                             }
+                        }
 
-                            NavigationActions.NavigateUp -> navController.navigateUp()
+                        NavigationActions.NavigateUp -> navController.navigateUp()
+                    }
+                }
+
+                NavHost(
+                    navController = navController,
+                    startDestination = koinInject<Navigator>().startDestination
+                ) {
+                    navigation<Destination.AuthDestination>(
+                        startDestination = Destination.LoginDestination,
+                    ) {
+                        composable<Destination.LoginDestination> {
+                            val viewModel = koinViewModel<LoginViewModel>()
+                            val state by viewModel.state.collectAsStateWithLifecycle()
+                            LoginScreen(state = state, onIntent = viewModel::processIntent)
                         }
                     }
-
-                    NavHost(
-                        navController = navController,
-                        startDestination = koinInject<Navigator>().startDestination,
-                        Modifier
-                            .padding(innerPadding)
-                            .fillMaxSize()
+                    navigation<Destination.MainDestination>(
+                        startDestination = Destination.ListDestination,
                     ) {
-                        navigation<Destination.AuthDestination>(
-                            startDestination = Destination.LoginDestination,
-                        ) {
-                            composable<Destination.LoginDestination> {
-                                val viewModel = koinViewModel<LoginViewModel>()
-                                val state by viewModel.state.collectAsStateWithLifecycle()
-                                LoginScreen(
-                                    state = state,
-                                    onIntent = viewModel::processIntent
-                                )
-                            }
+                        composable<Destination.ListDestination> {
+                            val viewModel = koinViewModel<ListViewModel>()
+                            val state by viewModel.state.collectAsStateWithLifecycle()
+                            ListScreen(state = state, onIntent = viewModel::processIntent)
                         }
-                        navigation<Destination.MainDestination>(
-                            startDestination = Destination.ListDestination,
-                        ) {
-                            composable<Destination.ListDestination> {
-                                Text("gfgv")
-                            }
-                            composable<Destination.DetailDestination> {
-                                // DetailScreen
-                            }
+                        composable<Destination.DetailDestination> {
+                            // DetailScreen
                         }
                     }
                 }
