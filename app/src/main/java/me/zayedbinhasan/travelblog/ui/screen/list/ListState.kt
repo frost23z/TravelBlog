@@ -8,5 +8,8 @@ data class ListState(
     val blogs: List<Blog> = emptyList(),
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
-    val errorMessage: NetworkError? = null
+    val errorMessage: NetworkError? = null,
+    val sort: Sort = Sort.DEFAULT,
+    val sortOrder: SortOrder = SortOrder.ASCENDING,
+    val showSortDialog: Boolean = false
 ) : State

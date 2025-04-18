@@ -4,13 +4,15 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 import kotlinx.coroutines.flow.Flow
 import me.zayedbinhasan.travelblog.data.local.entity.BlogEntity
 
 @Dao
 interface BlogDao {
-    @Query("SELECT * FROM blogs ORDER BY id ASC")
-    fun getAllBlogs(): Flow<List<BlogEntity>>
+    @RawQuery(observedEntities = [BlogEntity::class])
+    fun getAllBlogs(query: SupportSQLiteQuery): Flow<List<BlogEntity>>
 
     @Query("SELECT * FROM blogs WHERE id = :id")
     fun getBlogById(id: Int): Flow<BlogEntity?>

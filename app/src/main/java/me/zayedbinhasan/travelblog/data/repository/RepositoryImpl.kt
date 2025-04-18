@@ -3,12 +3,15 @@ package me.zayedbinhasan.travelblog.data.repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import me.zayedbinhasan.travelblog.data.local.LocalDatabase
+import me.zayedbinhasan.travelblog.data.local.dao.buildBlogQuery
 import me.zayedbinhasan.travelblog.data.local.entity.toBlog
 import me.zayedbinhasan.travelblog.data.local.entity.toBlogEntity
 import me.zayedbinhasan.travelblog.data.remote.BLOG_ARTICLES_URL
 import me.zayedbinhasan.travelblog.data.remote.RemoteHttpClient
 import me.zayedbinhasan.travelblog.domain.model.Blog
 import me.zayedbinhasan.travelblog.domain.repository.Repository
+import me.zayedbinhasan.travelblog.ui.screen.list.Sort
+import me.zayedbinhasan.travelblog.ui.screen.list.SortOrder
 import me.zayedbinhasan.travelblog.util.Error
 import me.zayedbinhasan.travelblog.util.NetworkError
 import me.zayedbinhasan.travelblog.util.Result
@@ -29,11 +32,15 @@ class RepositoryImpl(
         return result
     }
 
-    override fun getBlogsFromLocal(): Result<Flow<List<Blog>>, Error> {
+    override fun getBlogsFromLocal(
+        sort: Sort,
+        sortOrder: SortOrder
+    ): Result<Flow<List<Blog>>, Error> {
 
         val result = try {
-            localDatabase.blogDao().getAllBlogs()
-                .map { blogEntities -> blogEntities.map { it.toBlog() } }
+            localDatabase.blogDao().getAllBlogs(
+                query = buildBlogQuery(sort, sortOrder)
+            ).map { blogEntities -> blogEntities.map { it.toBlog() } }
         } catch (e: Exception) {
             return Result.Error(NetworkError.UNKNOWN)
         }
