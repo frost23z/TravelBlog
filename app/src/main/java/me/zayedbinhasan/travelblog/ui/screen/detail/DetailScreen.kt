@@ -99,11 +99,13 @@ fun DetailScreen(
                         ) {
                             Text(
                                 text = blog.title,
-                                style = MaterialTheme.typography.headlineSmall
+                                style = MaterialTheme.typography.headlineSmall,
+                                color = Color.Gray
                             )
                             Text(
                                 text = blog.date,
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.Gray
                             )
                         }
                     }
