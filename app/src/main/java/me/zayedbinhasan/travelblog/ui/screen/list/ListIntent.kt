@@ -9,4 +9,6 @@ sealed class ListIntent : Intent {
     data object ToggleSortDialog : ListIntent()
     data class SortBlogs(val sort: Sort) : ListIntent()
     data object SwitchSortOrder : ListIntent()
+    data class Search(val query: String) : ListIntent()
+    data object ToggleSearchBarVisibility : ListIntent()
 }

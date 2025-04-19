@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,6 +24,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -28,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import me.zayedbinhasan.travelblog.data.remote.BASE_URL
@@ -44,8 +49,27 @@ fun ListScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text("Travel Blog") },
+                title = {
+                    if (state.showSearchBar) {
+                        TextField(
+                            value = state.searchQuery,
+                            onValueChange = { onIntent(ListIntent.Search(it)) },
+                            placeholder = { Text("Search blogs...") },
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    } else {
+                        Text("Travel Blog")
+                    }
+                },
                 actions = {
+                    IconButton(onClick = { onIntent(ListIntent.ToggleSearchBarVisibility) }) {
+                        Icon(
+                            imageVector = if (state.showSearchBar) Icons.Default.Close else Icons.Default.Search,
+                            contentDescription = if (state.showSearchBar) "Close search" else "Search"
+                        )
+                    }
                     IconButton(onClick = { onIntent(ListIntent.ToggleSortDialog) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Sort,

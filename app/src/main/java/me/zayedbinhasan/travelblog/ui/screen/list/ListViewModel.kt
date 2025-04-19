@@ -54,11 +54,22 @@ class ListViewModel(
         repository.getBlogsFromLocal(state.value.sort, state.value.sortOrder)
             .onSuccess { blogListFlow ->
                 blogListFlow.collectLatest { blogList ->
-                    updateState { it.copy(blogs = blogList) }
+                    val filteredBlogs = if (state.value.searchQuery.isNotEmpty()) {
+                        blogList.filter { blog ->
+                            blog.title.contains(state.value.searchQuery, ignoreCase = true) ||
+                                    blog.author.name.contains(
+                                        state.value.searchQuery,
+                                        ignoreCase = true
+                                    )
+                        }
+                    } else {
+                        blogList
+                    }
+                    updateState { it.copy(blogs = filteredBlogs) }
                 }
             }.onError {
-            updateState { it.copy(errorMessage = NetworkError.UNKNOWN) }
-        }
+                updateState { it.copy(errorMessage = NetworkError.UNKNOWN) }
+            }
     }
 
     private fun handleRefresh() {
@@ -83,12 +94,24 @@ class ListViewModel(
         updateState { it.copy(showSortDialog = !state.value.showSortDialog) }
     }
 
+    private fun handleSearch(query: String) {
+        viewModelScope.launch {
+            updateState { it.copy(searchQuery = query) }
+            handleDatabaseCall()
+        }
+
+    }
+
     private suspend fun refreshBlogsFromNetwork() {
         repository.getBlogsFromRemoteToLocal().onSuccess {
             updateState { it.copy(isLoading = false) }
         }.onError { error ->
             updateState { it.copy(errorMessage = error) }
         }
+    }
+
+    private fun toggleSearchBarVisibility() {
+        updateState { it.copy(showSearchBar = !state.value.showSearchBar) }
     }
 
     override fun handleIntent(intent: ListIntent) {
@@ -103,6 +126,8 @@ class ListViewModel(
             )
 
             ListIntent.ToggleSortDialog -> toggleSortDialog()
+            is ListIntent.Search -> handleSearch(intent.query)
+            ListIntent.ToggleSearchBarVisibility -> toggleSearchBarVisibility()
         }
     }
 }

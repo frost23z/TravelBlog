@@ -11,5 +11,7 @@ data class ListState(
     val errorMessage: NetworkError? = null,
     val sort: Sort = Sort.DEFAULT,
     val sortOrder: SortOrder = SortOrder.ASCENDING,
-    val showSortDialog: Boolean = false
+    val showSortDialog: Boolean = false,
+    val showSearchBar: Boolean = false,
+    val searchQuery: String = ""
 ) : State
