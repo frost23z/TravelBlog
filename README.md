@@ -8,7 +8,6 @@
 [![Room](https://img.shields.io/badge/Room-2.7.0-red.svg)](https://developer.android.com/jetpack/androidx/releases/room)
 [![DataStore](https://img.shields.io/badge/DataStore-1.1.4-yellowgreen.svg)](https://developer.android.com/topic/libraries/architecture/datastore)
 [![Coil](https://img.shields.io/badge/Coil-3.1.0-lightgrey.svg)](https://coil-kt.github.io/coil)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A modern Android app showcasing my learning journey in Android development.
 
